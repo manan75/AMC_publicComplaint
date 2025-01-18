@@ -7,3 +7,5 @@ const ComplaintSchema = new mongoose.Schema({
     contact: String
 
 })
+const ComplaintModel = mongoose.model("complaints", ComplaintSchema)
+module.exports = ComplaintModel

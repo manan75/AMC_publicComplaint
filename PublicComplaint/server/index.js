@@ -4,6 +4,7 @@ const cors = require("cors");
 const UserModel = require('./Models/Users')
 const jwt = require("jsonwebtoken");
 const AdminModel = require("./Models/AdminModel");
+const ComplaintModel = require("./Models/Complaints");
 
 const app = express()
 app.use(express.json())
@@ -74,7 +75,9 @@ app.post('/adminlogin', (req,res)=>{
 //submitting a complaint form
 
 app.post('/ComplaintForm', (req,res)=>{
-  
+    ComplaintModel.create(req.body)
+    .then(users=res.json(users))
+    .catch(err=>res.json(err))
 })
 
 // Middleware to verify token
