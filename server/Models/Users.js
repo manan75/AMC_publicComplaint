@@ -6,5 +6,5 @@ const UserSchema = new mongoose.Schema({
     password: String
 })
 
-const UserModel = mongoose.model("users", UserSchema)   //this will create a colelction called users in mongodb with the provided schema
+const UserModel = mongoose.model("users", UserSchema)   //this will create a collection called users in mongodb with the provided schema
 module.exports = UserModel

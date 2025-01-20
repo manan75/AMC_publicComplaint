@@ -1,11 +1,12 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const UserModel = require('./Models/Users');
 const jwt = require("jsonwebtoken");
+const UserModel = require("./Models/Users");
 const AdminModel = require("./Models/AdminModel");
 const ComplaintModel = require("./Models/Complaints");
 
+// Middleware setup
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -13,66 +14,74 @@ app.use(cors());
 const SECRET_KEY = "your_secret_key";
 
 // Connect to MongoDB
-mongoose.connect("mongodb+srv://MananDataB:manan2005@cluster0.a3rww.mongodb.net/Users?retryWrites=true&w=majority&appName=Cluster0");
+mongoose.connect(
+  "mongodb+srv://MananDataB:manan2005@cluster0.a3rww.mongodb.net/Users?retryWrites=true&w=majority&appName=Cluster0",
+  { useNewUrlParser: true, useUnifiedTopology: true }
+).then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("Failed to connect to MongoDB", err));
 
 // Create a new user
-app.post('/', (req, res) => {
-  UserModel.create(req.body)
-    .then(users => res.json(users))
-    .catch(err => res.json(err));
+app.post('/', async (req, res) => {
+  try {
+    const user = await UserModel.create(req.body);
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: "Error creating user", error: err });
+  }
 });
 
 // Login for users
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
   const { email, password } = req.body;
-  UserModel.findOne({ email: email })
-    .then(user => {
-      if (user) {
-        if (user.password === password) {
-          const token = jwt.sign(
-            { id: user._id, email: user.email },
-            SECRET_KEY,
-            { expiresIn: "1hr" }
-          );
-          res.json({ message: "Success", token, user });
-        } else {
-          res.json({ message: "Incorrect password" });
-        }
-      } else {
-        res.json({ message: "No record found" });
-      }
-    })
-    .catch(err => res.status(500).json({ message: "Server error", error: err }));
+
+  try {
+    const user = await UserModel.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "No record found" });
+    }
+
+    if (user.password !== password) {
+      return res.status(401).json({ message: "Incorrect password" });
+    }
+
+    const token = jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: "1h" });
+    res.json({ message: "Success", token, user });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err });
+  }
 });
 
 // Login for admins
-app.post('/adminlogin', (req, res) => {
+app.post('/adminlogin', async (req, res) => {
   const { email, password } = req.body;
-  AdminModel.findOne({ email: email })
-    .then(user => {
-      if (user) {
-        if (user.password === password) {
-          const token = jwt.sign(
-            { id: user._id, email: user.email },
-            SECRET_KEY,
-            { expiresIn: "1hr" }
-          );
-          res.json({ message: "Success", token, user });
-        } else {
-          res.json({ message: "Incorrect password" });
-        }
-      } else {
-        res.json({ message: "No record found" });
-      }
-    })
-    .catch(err => res.status(500).json({ message: "Server error", error: err }));
+
+  try {
+    const admin = await AdminModel.findOne({ email });
+
+    if (!admin) {
+      return res.status(404).json({ message: "No record found" });
+    }
+
+    if (admin.password !== password) {
+      return res.status(401).json({ message: "Incorrect password" });
+    }
+
+    const token = jwt.sign({ id: admin._id }, SECRET_KEY, { expiresIn: "1h" });
+    res.json({ message: "Success", token, admin });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err });
+  }
 });
 
 // Submit a complaint form
-app.post('/ComplaintForm', (req, res) => {
-  ComplaintModel.create(req.body)
-    .then(complaint => res.json(complaint))
-    .catch(err => res.status(500).json({ message: "Failed to submit complaint", error: err }));
+app.post('/ComplaintForm', async (req, res) => {
+  try {
+    const complaint = await ComplaintModel.create(req.body);
+    res.json(complaint);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to submit complaint", error: err });
+  }
 });
 
 // Middleware to verify token
@@ -83,30 +92,32 @@ const verifyToken = (req, res, next) => {
     return res.status(403).json({ message: "Access denied" });
   }
 
-  jwt.verify(token, SECRET_KEY, (err, user) => {
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
     if (err) {
       return res.status(401).json({ message: "Invalid token" });
     }
-    req.user = user;
+    req.userId = decoded.id;
     next();
   });
 };
 
 // Protected route: Get user data
-app.get('/home', verifyToken, (req, res) => {
-  const { email } = req.user;
+app.get('/home', verifyToken, async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.userId);
 
-  UserModel.findOne({ email: email })
-    .then(user => {
-      if (!user) {
-        return res.status(404).json({ message: "User not found." });
-      }
-      res.json({ email: user.email });
-    })
-    .catch(err => res.status(500).json({ message: "An error occurred on the server.", error: err }));
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ email: user.email });
+  } catch (err) {
+    res.status(500).json({ message: "An error occurred on the server", error: err });
+  }
 });
 
 // Start the server
-app.listen(3001, () => {
-  console.log("Server is running on port 3001");
+const PORT = 3001;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
