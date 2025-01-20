@@ -19,3 +19,23 @@
   background-color: #005f9e;
   border-radius: 5px;
 }
+
+.navbar .btn {
+  font-size: 0.9rem;
+  padding: 0.4rem 0.8rem;
+}
+
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1030;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  /* Adds subtle shadow */
+}
+
+body {
+  padding-top: 60px;
+  /* Adjust this padding based on your Navbar's height */
+}

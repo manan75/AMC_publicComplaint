@@ -6,7 +6,6 @@ import MainContent from "./MainContent";
 const MainPage = () => {
    return (
       <div className="App d-flex flex-column min-vh-100">
-         <Header />
          <MainContent />
          <Footer />
       </div>

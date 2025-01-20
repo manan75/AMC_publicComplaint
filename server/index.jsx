@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const { auth, SECRET_KEY } = require("./auth.jsx");
 const jwt = require("jsonwebtoken");
 const UserModel = require("./Models/Users");
 const AdminModel = require("./Models/AdminModel");
@@ -11,17 +12,14 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const SECRET_KEY = "your_secret_key";
-
 // Connect to MongoDB
-mongoose.connect(
-  "mongodb+srv://MananDataB:manan2005@cluster0.a3rww.mongodb.net/Users?retryWrites=true&w=majority&appName=Cluster0",
+mongoose.connect("mongodb+srv://MananDataB:manan2005@cluster0.a3rww.mongodb.net/Users?retryWrites=true&w=majority&appName=Cluster0",
   { useNewUrlParser: true, useUnifiedTopology: true }
 ).then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("Failed to connect to MongoDB", err));
 
 // Create a new user
-app.post('/', async (req, res) => {
+app.post('/register', async (req, res) => {
   try {
     const user = await UserModel.create(req.body);
     res.json(user);
@@ -84,25 +82,8 @@ app.post('/ComplaintForm', async (req, res) => {
   }
 });
 
-// Middleware to verify token
-const verifyToken = (req, res, next) => {
-  const token = req.headers["token"];
-
-  if (!token) {
-    return res.status(403).json({ message: "Access denied" });
-  }
-
-  jwt.verify(token, SECRET_KEY, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ message: "Invalid token" });
-    }
-    req.userId = decoded.id;
-    next();
-  });
-};
-
 // Protected route: Get user data
-app.get('/home', verifyToken, async (req, res) => {
+app.get('/home', auth, async (req, res) => {
   try {
     const user = await UserModel.findById(req.userId);
 
