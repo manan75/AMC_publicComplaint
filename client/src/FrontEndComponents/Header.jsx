@@ -1,14 +1,13 @@
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import { Link } from 'react-router-dom';
-import '../styles/navbar.css';
+import React from "react";
+import { Container, Nav, Navbar } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import "./navbar.css";
 
-function NavbarMain() {
+const Header = () => {
   return (
     <Navbar bg="primary" variant="dark" expand="lg">
       <Container>
-        <Navbar.Brand href="#home" className="fw-bold fs-4">AMC</Navbar.Brand>
+        <Navbar.Brand className="fw-bold fs-4 text-white">AMC</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
@@ -29,6 +28,6 @@ function NavbarMain() {
       </Container>
     </Navbar>
   );
-}
+};
 
-export default NavbarMain;
+export default Header;

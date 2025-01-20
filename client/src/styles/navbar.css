@@ -1,0 +1,21 @@
+.navbar {
+  background-color: #004b87;
+  /* Professional dark blue */
+}
+
+.navbar-brand {
+  font-size: 1.8rem;
+  font-family: "Arial", sans-serif;
+  color: #ffffff !important;
+}
+
+.nav-link {
+  font-size: 1.1rem;
+  padding: 10px 15px;
+  color: #ffffff !important;
+}
+
+.nav-link:hover {
+  background-color: #005f9e;
+  border-radius: 5px;
+}
