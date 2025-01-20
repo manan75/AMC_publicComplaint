@@ -74,11 +74,12 @@ app.post('/adminlogin', (req,res)=>{
 
 //submitting a complaint form
 
-app.post('/ComplaintForm', (req,res)=>{
-    ComplaintModel.create(req.body)
-    .then(users=res.json(users))
-    .catch(err=>res.json(err))
-})
+  app.post('/ComplaintForm', (req,res)=>{
+    console.log('Request Body:', req.body);
+      ComplaintModel.create(req.body)
+      .then((complaint)=>res.json(complaint))
+      .catch(err=>res.json(err))
+  })
 
 // Middleware to verify token
 const verifyToken = (req, res, next) => {

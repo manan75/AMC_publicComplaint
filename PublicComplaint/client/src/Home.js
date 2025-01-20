@@ -1,4 +1,5 @@
 import { useLocation } from "react-router-dom";
+import MainPage from "./FrontEndComponents/MainContent";
 import NavbarMain from "./FrontEndComponents/Navbar";
 function Home(){
     const location = useLocation()
@@ -8,6 +9,7 @@ function Home(){
         <div>
             <NavbarMain/>
             <h1>Home page, welcome {user?.email}</h1>
+            <MainPage/>
         </div>
     )
    
