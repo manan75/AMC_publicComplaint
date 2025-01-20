@@ -4,19 +4,21 @@ import React, { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-function Login() {
+function AdminLogin() {
+
+
 
   const navigate = useNavigate();
   const handleRegister = (e) => {
     e.preventDefault();
 
-    axios.post('http://localhost:3001/login', { email, password })
+    axios.post('http://localhost:3001/adminlogin', { email, password })
       .then(result => {
         const { message, user, token } = result.data;
-        if (message == "Success") {
+        if (message === "Success") {
           if (user && token) {
             localStorage.setItem("token", token)
-            navigate('/home', { state: { user } })
+            navigate('/Adminhome', { state: { user } })
           }
 
         }
@@ -75,4 +77,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default AdminLogin;

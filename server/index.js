@@ -110,7 +110,7 @@ app.get('/home', verifyToken, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.json({ email: user.email });
+    res.json({ email: user.email, name: user.name });
   } catch (err) {
     res.status(500).json({ message: "An error occurred on the server", error: err });
   }

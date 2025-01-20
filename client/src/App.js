@@ -1,12 +1,11 @@
-import logo from './logo.svg';
-import './App.css';
-import RegisterForm from './Register';
+import RegisterForm from './Authentication/Register';
+import './styles/App.css';
 
 function App() {
   return (
- <div>
-  <RegisterForm/>
- </div>
+    <div>
+      <RegisterForm />
+    </div>
   );
 }
 

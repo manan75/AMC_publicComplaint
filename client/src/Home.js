@@ -41,7 +41,7 @@ function Home() {
     return (
         <div>
             <NavbarMain />
-            <h1>Home page, welcome {user.email}</h1>
+            <h2>Home page, welcome {user.name}</h2>
             <MainPage />
         </div>
     );
