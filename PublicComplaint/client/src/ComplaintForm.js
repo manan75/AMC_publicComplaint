@@ -8,6 +8,7 @@ function ComplaintForm() {
   const [urgency, setUrgency] = useState('');
   const [photo, setPhoto] = useState(null);
   const [contact, setContact] = useState({ name: '', email: '', phone: '' });
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();

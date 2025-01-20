@@ -99,9 +99,8 @@ const verifyToken = (req, res, next) => {
   };
   
   // Protected route example
-  app.get("/home", verifyToken, (req, res) => {
-    res.json("Welcome to the home page");
-  });
+
+  
 
 app.listen(3001, ()=>{
     console.log("is running")

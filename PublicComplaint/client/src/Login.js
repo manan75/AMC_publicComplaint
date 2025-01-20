@@ -16,10 +16,12 @@ function Login() {
    axios.post('http://localhost:3001/login',{email,password})
   .then(result=>{
     const { message, user, token } = result.data;
+    console.log(token)
     if(message=="Success"){
      if(user && token){
       localStorage.setItem("token", token)
-        navigate('/home', {state: {user}})
+      localStorage.setItem('user', JSON.stringify(user));
+        navigate('/home', {state: {user, token}})
      }
    
     }
